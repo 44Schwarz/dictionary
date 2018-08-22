@@ -29,6 +29,9 @@ class Word(models.Model):
     def __str__(self):
         return self.name
 
+    def get_usages(self):
+        return [obj.text for obj in Usage.objects.filter(word=self)]
+
     class Meta:
         ordering = ['name']
 

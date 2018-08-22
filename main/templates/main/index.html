@@ -6,21 +6,20 @@
 
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-8">
-        <h4>All dictionaries are listed here</h4>
+  <div class="container" style="width: 65%;">
+    <div class="row mt-3">
+      <div class="col">
+        <h4>My dictionaries</h4>
         <div class="list-group">
-          <a href="1" class="list-group-item list-group-item-action">English - English</a>
-          <a href="#" class="list-group-item list-group-item-action">Deutsch - English</a>
-          <a href="#" class="list-group-item list-group-item-action">English - Deutsch</a>
+          {% for dict in dictionaries %}
+            <a href="{{ dict.id }}" class="list-group-item list-group-item-action">{{ dict }}</a>
+          {% endfor %}
         </div>
       </div>
     </div>
-    <br><br>
 
-    <div class="row">
-      <div class="col-sm">
+    <div class="row mt-5">
+      <div class="col">
         <h4>Add a new dictionary</h4>
         <form>
           <div class="form-row">
@@ -33,13 +32,6 @@
               <label for="language2">Second language</label>
               <input id="language2" type="text" class="form-control" placeholder="Second language">
             </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-sm-6">
-              <label for="languageBase">Base language</label>
-              <input id="languageBase" type="text" class="form-control" placeholder="Language to which you would like to translate words">
-            </div>
-
           </div>
           <button type="submit" class="btn btn-primary">Add</button>
         </form>

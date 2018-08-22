@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}
-  English - English
+  {{ dict }}
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
+  <div class="container" style="width: 65%;">
+    <div class="row mt-3">
       <div class="col-sm-4" id="headerDict">
-        <h5>Language From:</h5>
-        <p>English</p>
-        <h5>Language To:</h5>
-        <p>English</p>
+        <h5>Language from:</h5>
+        <p>{{ dict.language_from }}</p>
+        <h5>Language to:</h5>
+        <p>{{ dict.language_to }}</p>
       </div>
 
       <div class="col-sm">
@@ -18,12 +18,11 @@
         <form>
           <div class="form-row">
             <div class="form-group col-sm-6">
-              <input type="text" class="form-control" placeholder="New word">
+              <input type="text" class="form-control" placeholder="New word in {{ dict.language_from }}">
             </div>
             <div class="form-group col-sm-6">
               <input type="text" class="form-control" placeholder="Definition">
             </div>
-
           </div>
 
           <div class="form-row">
@@ -31,71 +30,48 @@
               <input type="text" class="form-control" placeholder="Usages">
             </div>
             <div class="form-group col-sm-6">
-              <input type="text" class="form-control" placeholder="Translation to English">
+              <input type="text" class="form-control" placeholder="Translation to {{ dict.language_to }} (optional)">
             </div>
-
           </div>
 
-
-
-{#          <div class="form-row">#}
-{#            <div class="form-group col-sm-6">#}
-{#              <div class="row">#}
-{#                <input type="text" class="form-control" placeholder="New word">#}
-{#              </div>#}
-{#              <div class="row">#}
-{#                <input type="text" class="form-control" placeholder="Usages">#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="form-group col-sm-6">#}
-{#              <input type="text" class="form-control" placeholder="Definition">#}
-{#              <input type="text" class="form-control" placeholder="Translation to English">#}
-{##}
-{#            </div>#}
-{#          </div>#}
           <button type="submit" class="btn btn-primary">Add</button>
         </form>
       </div>
     </div>
-    <div class="row">
+
+    <div class="row mt-3">
       <div class="col">
-        <table class="table table-light table-hover table-responsive">
-          <caption>Word list</caption>
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Word</th>
-              <th scope="col">Definition</th>
-              <th scope="col">Examples of usage</th>
-              <th scope="col">Translation to English</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="col">1</th>
-              <td>Contemplate</td>
-              <td>To spend time considering a possible future action, or to consider one particular thing for a long time in a serious way (maybe add automatic results from some online-dictionary for a choice (when adding a new word))</td>
-              <td>
-                <ul>
-                  <li>Does an angel <i>contemplate</i> my fate</li>
-                  <li>Sharon is <i>contemplating</i> going to graduate school</li>
-                </ul>
-              </td>
-              <td>(optional)</td>
-            </tr>
-            <tr>
-              <th scope="col">2</th>
-              <td>Phone</td>
-              <td>A device to make calls and send sms messages</td>
-              <td>
-                <ul>
-                  <li>Could you answer the <i>phone</i>?</li>
-                </ul>
-              </td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-light table-hover">
+            <caption>Word list</caption>
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Word</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Examples of usage</th>
+                <th scope="col">Translation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for word in words %}
+                <tr>
+                  <th scope="col">{{ forloop.counter }}</th>
+                  <td>{{ word }}</td>
+                  <td>{{ word.definition }}</td>
+                  <td>
+                    <ul>
+                      {% for usg in word.get_usages %}
+                        <li>{{ usg }}</li>
+                      {% endfor %}
+                    </ul>
+                  </td>
+                  <td>{{ word.translation }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
