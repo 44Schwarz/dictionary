@@ -3,3 +3,47 @@
 {% block title %}
   Dictionaries
 {% endblock %}
+
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8">
+        <h4>All dictionaries are listed here</h4>
+        <div class="list-group">
+          <a href="1" class="list-group-item list-group-item-action">English - English</a>
+          <a href="#" class="list-group-item list-group-item-action">Deutsch - English</a>
+          <a href="#" class="list-group-item list-group-item-action">English - Deutsch</a>
+        </div>
+      </div>
+    </div>
+    <br><br>
+
+    <div class="row">
+      <div class="col-sm">
+        <h4>Add a new dictionary</h4>
+        <form>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label for="language1">First language</label>
+              <input id="language1" type="text" class="form-control" placeholder="First language">
+            </div>
+
+            <div class="form-group col-sm-6">
+              <label for="language2">Second language</label>
+              <input id="language2" type="text" class="form-control" placeholder="Second language">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-sm-6">
+              <label for="languageBase">Base language</label>
+              <input id="languageBase" type="text" class="form-control" placeholder="Language to which you would like to translate words">
+            </div>
+
+          </div>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
