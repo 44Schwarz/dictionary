@@ -1,0 +1,17 @@
+*.py[co]
+* copy.*
+.DS_Store
+*~lock.*
+*.swp
+*.swo
+*~
+run
+runs
+*sqlite3
+local_settings.py
+lancer
+old_proj_dbe
+__pycache__
+*.csv
+.idea/
+credentials.py
