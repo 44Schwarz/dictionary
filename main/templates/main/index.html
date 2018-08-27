@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
   Dictionaries
@@ -10,7 +11,7 @@
     <div class="row mt-3">
       <div class="col">
         <h4>My dictionaries</h4>
-        <div class="list-group">
+        <div id="listDict" class="list-group">
           {% for dict in dictionaries %}
             <a href="{{ dict.id }}" class="list-group-item list-group-item-action">{{ dict }}</a>
           {% endfor %}
@@ -21,21 +22,30 @@
     <div class="row mt-5">
       <div class="col">
         <h4>Add a new dictionary</h4>
-        <form>
+        <form method="post">
+          {% csrf_token %}
           <div class="form-row">
             <div class="form-group col-sm-6">
               <label for="language1">First language</label>
-              <input id="language1" type="text" class="form-control" placeholder="First language">
+              <input id="language1" type="text" class="form-control" placeholder="First language" required>
             </div>
 
             <div class="form-group col-sm-6">
               <label for="language2">Second language</label>
-              <input id="language2" type="text" class="form-control" placeholder="Second language">
+              <input id="language2" type="text" class="form-control" placeholder="Second language" required>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Add</button>
+          <p id="exists" style="color: red; display: none;">Such dictionary already exists</p>
+          <p id="notFilled" style="color: red; display: none;">Please fill in both fields</p>
+
+          <button type="button" class="btn btn-primary" id="addDict" onclick="addDictFunc()">Add</button>
+
         </form>
       </div>
     </div>
   </div>
+
+  <script src="{% static 'main/scripts.js' %}">
+
+  </script>
 {% endblock %}

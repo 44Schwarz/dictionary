@@ -10,8 +10,8 @@ class Language(models.Model):
 
 
 class Dictionary(models.Model):
-    language_from = models.ForeignKey(Language, related_name='language_from', on_delete=models.PROTECT)
-    language_to = models.ForeignKey(Language, related_name='language_to', on_delete=models.PROTECT)
+    language_from = models.ForeignKey(Language, related_name='language_from', on_delete=models.CASCADE)
+    language_to = models.ForeignKey(Language, related_name='language_to', on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} - {}'.format(self.language_from, self.language_to)
@@ -22,8 +22,8 @@ class Dictionary(models.Model):
 
 class Word(models.Model):
     name = models.CharField(max_length=50)
-    definition = models.TextField()
-    dictionary = models.ForeignKey(Dictionary, blank=True, null=True, on_delete=models.CASCADE)
+    definition = models.TextField(blank=True)
+    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE)
     translation = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
