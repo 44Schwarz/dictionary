@@ -26,10 +26,10 @@ function addWordFunc() {
 
   $.ajax({
     type: "POST",
-    url: "#",
-    data: {csrfmiddlewaretoken: csrftoken, 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
+    url: "/add_word/",
+    data: {csrfmiddlewaretoken: csrftoken, 'add': true, 'delete': false, 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
     success: function (data) {
-      if (data['created']) {
+      if (data['done']) {
         location.reload();
       }
       else {
@@ -45,9 +45,9 @@ function editWordFunc() {
   $.ajax({
     type: "POST",
     url: "#",
-    data: {csrfmiddlewaretoken: csrftoken, 'word_id': $('#idModal').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
+    data: {csrfmiddlewaretoken: csrftoken, 'add': false, 'delete': false, 'word_id': $('#idModal').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
     success: function (data) {
-      if (data['created']) {
+      if (data['done']) {
         location.reload();
       }
       else {
@@ -58,17 +58,30 @@ function editWordFunc() {
 }
 
 function editModalPopulate(word, word_id, definition, usages, translation) {
-  $( document ).ready(function() {
-    // console.log(word, word_id, definition, usages, translation);
     $('#wordModal').val(word);
     $('#defModal').val(definition);
     $('#usgModal').val(usages.join('\n'));
     $('#translModal').val(translation);
 
     $('#idModal').val(word_id);
+}
 
-    // console.log($('#idModal').val());
+function deleteWord(word_id) {
+  let csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 
+  $.ajax({
+    type: "POST",
+    url: "#",
+    data: {csrfmiddlewaretoken: csrftoken, 'add': false, 'delete': true, 'word_id': word_id},
+    success: function (data) {
+      console.log(data);
+      if (data['done']) {
+        location.reload();
+      }
+      else {
+
+      }
+    }
   });
 
 }

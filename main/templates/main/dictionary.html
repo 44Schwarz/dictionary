@@ -15,6 +15,13 @@
       </div>
 
       <div class="col-sm">
+        <form action="/dictionaries/delete_dict/" method="post">
+          {% csrf_token %}
+          <input name="dict_id" value="{{ dict.id }}" hidden>
+          <button type="submit" class="btn btn-danger">Delete the current dictionary</button>
+        </form>
+      </div>
+      <div class="col-sm">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add a new word</button>
       </div>
     </div>
@@ -81,6 +88,7 @@
         <div class="modal-footer">
 {#          <button type="button" class="btn btn-primary" onclick="editWordFunc()">Save changes</button>#}
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" onclick="deleteWord()">Delete</button>
         </div>
       </div>
     </div>

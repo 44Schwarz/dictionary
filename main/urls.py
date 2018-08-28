@@ -17,6 +17,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.all_dictionaries),
+    path('', views.all_dictionaries, name='dictionaries_list'),
     path('<dict_id>', views.detail),
+    path('add_word/', views.add_word),
+    path('delete_dict/', views.delete_dict),
 ]

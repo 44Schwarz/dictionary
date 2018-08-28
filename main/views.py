@@ -3,7 +3,8 @@ from .models import Language, Dictionary, Word
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
-from django.http.response import HttpResponseForbidden
+from django.http.response import HttpResponseForbidden, HttpResponseRedirect
+from django.urls import reverse
 from django.views import View
 from django.contrib.auth.mixins import UserPassesTestMixin
 
@@ -110,10 +111,6 @@ def add_word(request):
 @login_required
 @require_http_methods(["POST"])
 def delete_dict(request):
-    try:
-        d_id = request.POST.get('dict_id')
-        Dictionary.objects.filter(user=request.user).get(pk=d_id).delete()
+    Dictionary.objects.filter(user=request.user).get(pk=request.POST.get('dict_id')).delete()
 
-        return JsonResponse({'result': 'success'})
-    except:
-        return JsonResponse({'result': 'fail'})
+    return HttpResponseRedirect(reverse('dictionaries_list'))
