@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -10,6 +11,7 @@ class Language(models.Model):
 
 
 class Dictionary(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     language_from = models.ForeignKey(Language, related_name='language_from', on_delete=models.CASCADE)
     language_to = models.ForeignKey(Language, related_name='language_to', on_delete=models.CASCADE)
 
@@ -29,6 +31,7 @@ class Word(models.Model):
     def __str__(self):
         return self.name
 
+    @property
     def get_usages(self):
         return [obj.text for obj in Usage.objects.filter(word=self)]
 
