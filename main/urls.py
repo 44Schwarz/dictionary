@@ -20,5 +20,6 @@ urlpatterns = [
     path('', views.all_dictionaries, name='dictionaries_list'),
     path('<dict_id>', views.detail),
     path('add_word/', views.add_word),
+    path('delete_word/', views.delete_word),
     path('delete_dict/', views.delete_dict),
 ]

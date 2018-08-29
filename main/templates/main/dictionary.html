@@ -78,7 +78,7 @@
             <input id="wordModal" class="form-control" type="text">
             <label for="defModal">Definition</label>
             <textarea id="defModal" class="form-control" rows="3"></textarea>
-            <label for="usgModal">Usages</label>
+            <label for="usgModal">Usages <small>(enter each usage on a new line)</small></label>
             <textarea id="usgModal" class="form-control" rows="3"></textarea>
             <label for="translModal">Translation</label>
             <input id="translModal" class="form-control" type="text">
@@ -86,7 +86,7 @@
           </div>
         </div>
         <div class="modal-footer">
-{#          <button type="button" class="btn btn-primary" onclick="editWordFunc()">Save changes</button>#}
+          <button type="button" class="btn btn-primary" onclick="editWordFunc()">Save changes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-danger" onclick="deleteWord()">Delete</button>
         </div>
@@ -114,6 +114,9 @@
               </div>
               <div class="form-group col-sm">
                 <input id="translation" type="text" class="form-control" placeholder="Translation to {{ dict.language_to }}">
+              </div>
+              <div class="form-group col-sm">
+                <input id="dict_id" type="text" class="form-control" value="{{ dict.id }}" hidden>
               </div>
           </form>
         </div>

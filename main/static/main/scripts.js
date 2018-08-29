@@ -26,14 +26,11 @@ function addWordFunc() {
 
   $.ajax({
     type: "POST",
-    url: "/add_word/",
-    data: {csrfmiddlewaretoken: csrftoken, 'add': true, 'delete': false, 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
+    url: "/dictionaries/add_word/",
+    data: {csrfmiddlewaretoken: csrftoken, 'dict_id': $('#dict_id').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'translation': $('#translation').val()},
     success: function (data) {
       if (data['done']) {
         location.reload();
-      }
-      else {
-
       }
     }
   });
@@ -45,16 +42,29 @@ function editWordFunc() {
   $.ajax({
     type: "POST",
     url: "#",
-    data: {csrfmiddlewaretoken: csrftoken, 'add': false, 'delete': false, 'word_id': $('#idModal').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
+    data: {csrfmiddlewaretoken: csrftoken, 'word_id': $('#idModal').val(), 'word': $('#wordModal').val(), 'definition': $('#defModal').val(), 'usage': $('#usgModal').val(), 'translation': $('#translModal').val()},
     success: function (data) {
       if (data['done']) {
         location.reload();
       }
-      else {
+    }
+  });
+}
 
+function deleteWord() {
+  let csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+  $.ajax({
+    type: "POST",
+    url: "/dictionaries/delete_word/",
+    data: {csrfmiddlewaretoken: csrftoken, 'word_id': $('#idModal').val()},
+    success: function (data) {
+      if (data['done']) {
+        location.reload();
       }
     }
   });
+
 }
 
 function editModalPopulate(word, word_id, definition, usages, translation) {
@@ -66,22 +76,3 @@ function editModalPopulate(word, word_id, definition, usages, translation) {
     $('#idModal').val(word_id);
 }
 
-function deleteWord(word_id) {
-  let csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-
-  $.ajax({
-    type: "POST",
-    url: "#",
-    data: {csrfmiddlewaretoken: csrftoken, 'add': false, 'delete': true, 'word_id': word_id},
-    success: function (data) {
-      console.log(data);
-      if (data['done']) {
-        location.reload();
-      }
-      else {
-
-      }
-    }
-  });
-
-}

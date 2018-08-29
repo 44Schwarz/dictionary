@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Language, Dictionary, Word
+from .models import Language, Dictionary, Word, Usage
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
@@ -37,49 +37,26 @@ def all_dictionaries(request):
 def detail(request, dict_id):
     if request.user == Dictionary.objects.get(pk=dict_id).user:
         if request.method == 'POST':
-            if request.POST.get('add') == 'true':
-                word = request.POST.get('word')
-                if not word:
-                    return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
+            word = request.POST.get('word')
+            if not word:
+                return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
 
-                definition = request.POST.get('definition')
-                usage = request.POST.get('usage')
-                translation = request.POST.get('translation')
-                w, done = Word.objects.get_or_create(name=word.capitalize(),
-                                                     dictionary=Dictionary.objects.get(pk=dict_id),
-                                                     defaults={'translation': translation, 'definition': definition})
-
+            definition = request.POST.get('definition')
+            usage = request.POST.get('usage')
+            usgs = usage.split(sep='\n')
+            translation = request.POST.get('translation')
             word_id = request.POST.get('word_id')
+            w, done = Word.objects.update_or_create(pk=word_id, defaults={'name': word.capitalize(),
+                                                                          'translation': translation,
+                                                                          'definition': definition})
 
-            # TODO bug with empty word's names
+            if usgs:
+                Usage.objects.filter(word=w).delete()
+                for us in usgs:
+                    if us:
+                        Usage.objects.get_or_create(text=us.capitalize(), word=w)
 
-            if word_id:  # edit or delete the existing word
-                w = Word.objects.get(id=word_id)
-                if request.POST.get('delete'):  # delete
-                    w.delete()
-                    done = True
-                else:  # edit
-                    word = request.POST.get('word')
-                    if not word:
-                        return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
-
-                    definition = request.POST.get('definition')
-                    usage = request.POST.get('usage')
-                    translation = request.POST.get('translation')
-
-                    w.name = word.capitalize()
-                    w.definition = definition
-                    w.translation = translation
-                    w.save()
-                    done = True
-            else:  # add a new word (or update existing but via form for adding a new one)
-                w, done = Word.objects.get_or_create(name=word.capitalize(), dictionary=Dictionary.objects.get(pk=dict_id), defaults={'translation': translation, 'definition': definition})
-
-            # TODO look at update_or_create() method - use it for editing words
-            # https://docs.djangoproject.com/en/2.1/ref/models/querysets/#update-or-create
-
-            return JsonResponse({'done': done, 'word': str(w), 'definition': word.definition,
-                                 'translation': word.translation})
+            return JsonResponse({'done': True})
 
         elif request.method == 'GET':
             context = {
@@ -92,9 +69,8 @@ def detail(request, dict_id):
 
 
 @login_required
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["POST"])
 def add_word(request):
-    # TODO dict_id
     word = request.POST.get('word')
     if not word:
         return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
@@ -103,9 +79,18 @@ def add_word(request):
     usage = request.POST.get('usage')
     translation = request.POST.get('translation')
 
-    w, done = Word.objects.get_or_create(name=word.capitalize(), dictionary=Dictionary.objects.get(pk=dict_id),
-                                         defaults={'translation': translation, 'definition': definition})
-    return JsonResponse({})
+    w, done = Word.objects.get_or_create(name=word.capitalize(), dictionary=Dictionary.objects.get(pk=request.POST.get('dict_id')), defaults={'translation': translation, 'definition': definition})
+    return JsonResponse({'done': True})
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_word(request):
+    try:
+        Word.objects.get(pk=request.POST.get('word_id')).delete()
+        return JsonResponse({'done': True})
+    except:
+        return JsonResponse({'done': False})
 
 
 @login_required
