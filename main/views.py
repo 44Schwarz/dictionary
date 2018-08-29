@@ -46,9 +46,9 @@ def detail(request, dict_id):
             usgs = usage.split(sep='\n')
             translation = request.POST.get('translation')
             word_id = request.POST.get('word_id')
-            w, done = Word.objects.update_or_create(pk=word_id, defaults={'name': word.capitalize(),
-                                                                          'translation': translation,
-                                                                          'definition': definition})
+            w, _ = Word.objects.update_or_create(pk=word_id, defaults={'name': word.capitalize(),
+                                                                       'translation': translation,
+                                                                       'definition': definition})
 
             if usgs:
                 Usage.objects.filter(word=w).delete()
@@ -71,16 +71,29 @@ def detail(request, dict_id):
 @login_required
 @require_http_methods(["POST"])
 def add_word(request):
-    word = request.POST.get('word')
-    if not word:
-        return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
+    try:
+        word = request.POST.get('word')
+        if not word:
+            return JsonResponse({'done': False})  # return an anchor to indicate that fields are empty
 
-    definition = request.POST.get('definition')
-    usage = request.POST.get('usage')
-    translation = request.POST.get('translation')
+        definition = request.POST.get('definition')
+        usage = request.POST.get('usage')
+        usgs = usage.split(sep='\n')
+        translation = request.POST.get('translation')
 
-    w, done = Word.objects.get_or_create(name=word.capitalize(), dictionary=Dictionary.objects.get(pk=request.POST.get('dict_id')), defaults={'translation': translation, 'definition': definition})
-    return JsonResponse({'done': True})
+        w, _ = Word.objects.get_or_create(name=word.capitalize(),
+                                          dictionary=Dictionary.objects.get(pk=request.POST.get('dict_id')),
+                                          defaults={'translation': translation, 'definition': definition})
+
+        if usgs:
+            Usage.objects.filter(word=w).delete()
+            for us in usgs:
+                if us:
+                    Usage.objects.get_or_create(text=us.capitalize(), word=w)
+
+        return JsonResponse({'done': True})
+    except:
+        return JsonResponse({'done': False})
 
 
 @login_required

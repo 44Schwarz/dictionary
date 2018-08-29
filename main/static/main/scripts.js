@@ -27,7 +27,7 @@ function addWordFunc() {
   $.ajax({
     type: "POST",
     url: "/dictionaries/add_word/",
-    data: {csrfmiddlewaretoken: csrftoken, 'dict_id': $('#dict_id').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'translation': $('#translation').val()},
+    data: {csrfmiddlewaretoken: csrftoken, 'dict_id': $('#dict_id').val(), 'word': $('#word').val(), 'definition': $('#definition').val(), 'usage': $('#usage').val(), 'translation': $('#translation').val()},
     success: function (data) {
       if (data['done']) {
         location.reload();
